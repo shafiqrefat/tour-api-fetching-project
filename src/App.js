@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+import Tours from "./Tours";
 
 function App() {
+  const [tourPlanning, setTourPlanning] = useState([]);
+  const removeTourPlanning = (id) => {
+    const newTourPlanning = tourPlanning.filter(
+      (tourPlan) => tourPlan.id !== id
+    );
+    setTourPlanning(newTourPlanning);
+  };
+  useEffect(() => {
+    fetch("https://course-api.com/react-tours-project")
+      .then((response) => response.json())
+      .then((data) => setTourPlanning(data));
+  }, []);
+  if (tourPlanning.length === 0) {
+    return (
+      <main>
+        <div className="title">
+          <h2>No Tours Left</h2>
+        </div>
+      </main>
+    );
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main>
+      <Tours
+        tours={tourPlanning}
+        removeTourPlanning={removeTourPlanning}
+      ></Tours>
+    </main>
   );
 }
 
